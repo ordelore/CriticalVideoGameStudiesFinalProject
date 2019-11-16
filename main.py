@@ -4,7 +4,7 @@ import pygame, sys, util
 def main(args):
 	pygame.init()
 	
-	#scaling factor of game's window'
+	#scaling factor of the game's window'
 	scale = 2
 	#tuple of game's window size'
 	size = (int(scale * 320),int(scale * 240))
@@ -13,14 +13,18 @@ def main(args):
 	gameScreen.fill([0,0,0])
 	pygame.display.update()
 	
-	
 	previousFrameTime = 0
 	timeBetweenFrames = 16
+	
+	isMainMenu = False
+	isGamePlay = True
+	
 	while (True):
 		if (util.checkForQuit(pygame.event.get())):
 			pygame.quit()
 			sys.exit()
 		#handle input section
+		keys = pygame.key.get_pressed()
 		#if main menu, do main menu stuff
 			#if horizontal arrows pressed
 				#update which menu option is highlighted
@@ -35,7 +39,15 @@ def main(args):
 			#horizontal arrows
 				#adjust sliders/options
 		#otherwise, do main game stuff
-		
+			#this will be like character movement, maybe two extrat buttons for attacking/blocking
+			#if an option is presented
+				#handle selection
+		if (isGameplay):
+			if (keys[pygame.K_LEFT]):
+			if (keys[pygame.K_RIGHT]):
+			if (keys[pygame.K_UP]):
+			if (keys[pygame.K_DOWN]):
+				
 		#handle drawing things
 		#draw everything onto a single surface, then blit that surface onto the screen at the end
 		#the drawing should only occur at the fastest 60 times per second
