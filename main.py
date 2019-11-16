@@ -35,7 +35,10 @@ def main(args):
 			upPressed = True
 		if (keys[pygame.K_DOWN]):
 			downPressed = True
-
+		if (keys[pygame.K_z]):
+			zPressed = True
+		if (keys[pygame.K_x]):
+			xPressed = True
 		#if main menu, do main menu stuff
 			#if horizontal arrows pressed
 				#update which menu option is highlighted
