@@ -1,4 +1,5 @@
-import pygame, sys, util
+import player, pygame, sys, util
+import pygame.time
 
 
 def main(args):
@@ -13,11 +14,12 @@ def main(args):
 	gameScreen.fill([0,0,0])
 	pygame.display.update()
 	
-	previousFrameTime = 0
+	previousFrame = 0
 	timeBetweenFrames = 16
 	
 	isMainMenu = False
 	isGamePlay = True
+	isPlayerInitialized = False
 	
 	while (True):
 		if (util.checkForQuit(pygame.event.get())):
@@ -42,11 +44,17 @@ def main(args):
 			#this will be like character movement, maybe two extrat buttons for attacking/blocking
 			#if an option is presented
 				#handle selection
-		if (isGameplay):
+		if (isGamePlay):
+			if (not(isPlayerInitialized)):
+				mainCharacter = player.Player(gameScreen)
 			if (keys[pygame.K_LEFT]):
+				leftPressed = True
 			if (keys[pygame.K_RIGHT]):
+				rightPressed = True
 			if (keys[pygame.K_UP]):
+				upPressed = True
 			if (keys[pygame.K_DOWN]):
+				downPressed = True
 				
 		#handle drawing things
 		#draw everything onto a single surface, then blit that surface onto the screen at the end
@@ -62,7 +70,15 @@ def main(args):
 				#draw the help text
 				#include that the player should press [Enter] to return to the main menu
 		#otheriwse, do main game stuff
-	
+		currentTime = pygame.time.get_ticks()
+		if (currentTime - previousFrame > timeBetweenFrames):
+			previousFrame = currentTime
+			gameScreen.fill((0,0,0))
+			#time to draw a new frame
+			if (isGamePlay):
+				mainCharacter.drawCharacter(gameScreen)
+			
+			pygame.display.update()
 
 if __name__ == '__main__':
     import sys
