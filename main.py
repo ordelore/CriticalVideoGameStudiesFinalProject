@@ -27,6 +27,15 @@ def main(args):
 			sys.exit()
 		#handle input section
 		keys = pygame.key.get_pressed()
+		if (keys[pygame.K_LEFT]):
+			leftPressed = True
+		if (keys[pygame.K_RIGHT]):
+			rightPressed = True
+		if (keys[pygame.K_UP]):
+			upPressed = True
+		if (keys[pygame.K_DOWN]):
+			downPressed = True
+
 		#if main menu, do main menu stuff
 			#if horizontal arrows pressed
 				#update which menu option is highlighted
@@ -41,20 +50,12 @@ def main(args):
 			#horizontal arrows
 				#adjust sliders/options
 		#otherwise, do main game stuff
-			#this will be like character movement, maybe two extrat buttons for attacking/blocking
+			#this will be like character movement, maybe two extra buttons for attacking/blocking
 			#if an option is presented
 				#handle selection
 		if (isGamePlay):
 			if (not(isPlayerInitialized)):
 				mainCharacter = player.Player(gameScreen)
-			if (keys[pygame.K_LEFT]):
-				leftPressed = True
-			if (keys[pygame.K_RIGHT]):
-				rightPressed = True
-			if (keys[pygame.K_UP]):
-				upPressed = True
-			if (keys[pygame.K_DOWN]):
-				downPressed = True
 				
 		#handle drawing things
 		#draw everything onto a single surface, then blit that surface onto the screen at the end
