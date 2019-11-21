@@ -1,4 +1,4 @@
-import player, pygame, sys, util
+import player, pygame, sys, util, mainMenu
 import pygame.time
 
 
@@ -11,15 +11,19 @@ def main(args):
 	size = (int(scale * 320),int(scale * 240))
 	#intialize the game screen and fill it with black
 	gameScreen = pygame.display.set_mode(size)
-	gameScreen.fill([0,0,0])
+	gameScreen.fill(util.black)
 	pygame.display.update()
 	
 	previousFrame = 0
 	timeBetweenFrames = 16
 	
-	isMainMenu = False
-	isGamePlay = True
+	menu = mainMenu.Menu(gameScreen, "Grief", scale)
+	
+	isMainMenu = True
+	isGamePlay = False
 	isPlayerInitialized = False
+	canPressLeft = True
+	canPressRight = True
 	
 	while (True):
 		if (util.checkForQuit(pygame.event.get())):
@@ -29,20 +33,37 @@ def main(args):
 		keys = pygame.key.get_pressed()
 		if (keys[pygame.K_LEFT]):
 			leftPressed = True
+		else:
+			leftPressed = False
+		
 		if (keys[pygame.K_RIGHT]):
 			rightPressed = True
+		else:
+			rightPressed = False
+			
 		if (keys[pygame.K_UP]):
 			upPressed = True
+		else:
+			upPressed = False
+		
 		if (keys[pygame.K_DOWN]):
 			downPressed = True
+		else:
+			downPressed = False
+			
 		if (keys[pygame.K_z]):
 			zPressed = True
+		else:
+			zPressed = False
+			
 		if (keys[pygame.K_x]):
 			xPressed = True
+		else:
+			xPressed = False
 		#if main menu, do main menu stuff
 			#if horizontal arrows pressed
 				#update which menu option is highlighted
-			#if enter is pressed
+			#if z is pressed
 				#update which screen should be shown now
 		#if help screen
 			#if enter pressed
@@ -56,6 +77,18 @@ def main(args):
 			#this will be like character movement, maybe two extra buttons for attacking/blocking
 			#if an option is presented
 				#handle selection
+		if (isMainMenu):
+			if (leftPressed and canPressLeft):
+				menu.decreaseHighlightIndex()
+				canPressLeft = False
+			elif (not(leftPressed or canPressLeft)):
+				canPressLeft = True
+				
+			if (rightPressed and canPressRight):
+				menu.increaseHighlightIndex()
+				canPressRight = False
+			elif (not(rightPressed or canPressRight)):
+				canPressRight = True
 		if (isGamePlay):
 			if (not(isPlayerInitialized)):
 				mainCharacter = player.Player(gameScreen)
@@ -79,6 +112,8 @@ def main(args):
 			previousFrame = currentTime
 			gameScreen.fill((0,0,0))
 			#time to draw a new frame
+			if (isMainMenu):
+				menu.drawMainMenu(gameScreen)
 			if (isGamePlay):
 				mainCharacter.drawCharacter(gameScreen)
 			

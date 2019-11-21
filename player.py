@@ -2,7 +2,7 @@ import pygame, util
 
 class Player:
 	def __init__(self, surface):
-		self.sprite = util.loadImage("redBlueSprite")
+		self.sprite = util.loadImage("redBlueSprite", 0.5)
 		
 		width, height = surface.get_size()
 		playerWidth, playerHeight = self.sprite.get_size()
