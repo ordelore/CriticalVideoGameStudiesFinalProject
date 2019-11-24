@@ -66,4 +66,5 @@ class Menu:
 		else:
 			self.optionsText = textBox
 		
-		
+	def getPosition(self):
+		return self.highlighted
