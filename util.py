@@ -1,8 +1,20 @@
 import pygame, os
 
-black = [0,0,0]
-white = [255,255,255]
-green = [0,255,0]
+black  	  = [0,0,0]
+white  	  = [255,255,255]
+
+red    	  = [255,0,0]
+yellow 	  = [255,255,0]
+green  	  = [0,255,0]
+greenBlue = [0,255,255]
+blue   	  = [0,0,255]
+purple 	  = [255,0,255]
+
+rainbow = (red,yellow,green,greenBlue,blue,purple)
+
+def getRainbow(index):
+	return rainbow[index % len(rainbow)]
+	
 def checkForQuit(events):
 	for event in events:
 		if event.type == pygame.QUIT:

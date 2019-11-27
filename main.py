@@ -127,6 +127,7 @@ def main(args):
 				if (not(isMapInitialized)):
 					mainMap = mapScreen.MapScreen(gameScreen, scale)
 					isMapInitialized = True
+				#TODO: check for collision before moving the player
 				if (leftPressed):
 					mainMap.shiftScreen((scale,0))
 				if (rightPressed):
@@ -135,6 +136,7 @@ def main(args):
 					mainMap.shiftScreen((0,scale))
 				if (downPressed):
 					mainMap.shiftScreen((0,-scale))
+				#if z is pressed, check for collision IN FRONT of where the player is
 			#handle drawing things
 			#draw everything onto a single surface, then blit that surface onto the screen at the end
 			#the drawing should only occur at the fastest 60 times per second
