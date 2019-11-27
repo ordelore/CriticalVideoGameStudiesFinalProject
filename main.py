@@ -1,4 +1,4 @@
-import player, pygame, sys, util, mainMenu, helpScreen, mapScreen
+import player, pygame, sys, util, mainMenu, helpScreen, mapScreen, character
 import pygame.time
 
 
@@ -122,7 +122,7 @@ def main(args):
 					
 			if (isGamePlay):
 				if (not(isPlayerInitialized)):
-					mainCharacter = player.Player(gameScreen, scale)
+					mainCharacter = character.Character(gameScreen, scale)
 					isPlayerInitialized = True
 				if (not(isMapInitialized)):
 					mainMap = mapScreen.MapScreen(gameScreen, scale)

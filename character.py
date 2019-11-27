@@ -12,7 +12,7 @@ class Character(pygame.sprite.Sprite):
         self.rect = self.image.get_rect() 
 
     def drawCharacter(self, surface):
-        surface.blit(self.sprite, self.position)
+        surface.blit(self.image, self.position)
 
     def detectCollision(self, otherSprite):
         return self.rect.colliderect(otherSprite.rect)
