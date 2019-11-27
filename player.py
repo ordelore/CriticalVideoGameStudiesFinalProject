@@ -1,6 +1,6 @@
 import pygame, util
 
-class Player:
+class Player: 
 	def __init__(self, surface, scale):
 		self.sprite = util.loadImage("redBlueSprite", scale * 0.1)
 		
@@ -12,4 +12,3 @@ class Player:
 	
 	def drawCharacter(self, surface):
 		surface.blit(self.sprite, self.position)
-		
