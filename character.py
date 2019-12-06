@@ -3,7 +3,7 @@ import pygame, util
 class Character(pygame.sprite.Sprite):
     def __init__(self, surface, scale):
         super().__init__()
-        self.image = util.loadImage("redBlueSprite", scale * 0.1)
+        self.image = util.loadImage("NPC Front 1.png", "Characters", scale * 0.1)
         width, height = surface.get_size()
         playerWidth, playerHeight = self.image.get_size()
         positionX = int(width / 2 - playerWidth / 2)

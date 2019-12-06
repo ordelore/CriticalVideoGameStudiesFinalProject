@@ -1,7 +1,7 @@
 import pygame, util
 class MapScreen:
 	def __init__(self, surface, scale):
-		self.image = util.loadImage("paletteBackground.png", scale)
+		self.image = util.loadImage("Classroom No Sprites.png", "Rooms", scale)
 		self.position = (0,0)
 		
 	def blitMap(self, surface):

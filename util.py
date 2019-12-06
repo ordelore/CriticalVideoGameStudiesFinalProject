@@ -1,5 +1,6 @@
 import pygame, os
-
+import pygame.font
+import pygame.mixer
 black  	  = [0,0,0]
 white  	  = [255,255,255]
 
@@ -19,8 +20,14 @@ def checkForQuit(events):
 	for event in events:
 		if event.type == pygame.QUIT:
 			return True
-
-def loadImage(spriteName, scale):
-		sprite = pygame.image.load(os.path.join("sprites", spriteName))
+def loadFont(name, size):
+	return pygame.font.Font(os.path.join("fonts", name), size)
+def loadImage(spriteName, subFolder, scale):
+		sprite = pygame.image.load(os.path.join("sprites", subFolder, spriteName))
 		newSize = tuple([int(scale*x) for x in sprite.get_size()])
 		return pygame.transform.scale(sprite, newSize)
+
+def loadAudio(name):
+	
+	pygame.mixer.music.load(os.path.join("audio", name))
+	pygame.mixer.music.play(-1)

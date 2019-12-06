@@ -3,7 +3,7 @@ import pygame.font
 class HelpScreen:
 	def __init__(self, scale):
 		self.helpText = "This is currently placeholder text. Eventually, there will be instructions and controls"
-		self.helpFont = pygame.font.Font(os.path.join("fonts", "GraffitiPaintBrush.ttf"), int(scale * 15))
+		self.helpFont = util.loadFont("GraffitiPaintBrush.ttf", int(scale * 15))
 		self.fontColor = util.white
 	#code for multiline text rendering is adapted from
 	#https://stackoverflow.com/questions/42014195/rendering-text-with-multiple-lines-in-pygame

@@ -6,8 +6,8 @@ class Menu:
 		self.highlighted = 0
 		self.screenWidth = surface.get_width()
 		
-		self.mainFont = pygame.font.Font(os.path.join("fonts", "SillySet.ttf"), int(50 * scale))
-		self.subFont = pygame.font.Font(os.path.join("fonts", "BLKCHCRY.TTF"), int(12 * scale))
+		self.mainFont = util.loadFont("SillySet.ttf", int(50* scale))
+		self.subFont = util.loadFont("BLKCHCRY.TTF", int(12 * scale))
 		
 		gameName = "Grief"
 		titleWidth, titleHeight = self.mainFont.render("Grief", True, util.white).get_size()

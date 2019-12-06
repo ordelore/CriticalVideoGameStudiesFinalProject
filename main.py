@@ -1,10 +1,17 @@
-import player, pygame, sys, util, mainMenu, helpScreen, mapScreen, character
+import character
+import pygame, sys
+import util
+import mainMenu
+import helpScreen
+import mapScreen
+import character
 import pygame.time
-
+import pygame.mixer
+import dialogue
 
 def main(args):
 	pygame.init()
-	
+	pygame.mixer.init()
 	#scaling factor of the game's window'
 	scale = 2
 	#tuple of game's window size'
@@ -19,12 +26,18 @@ def main(args):
 	
 	menu = mainMenu.Menu(gameScreen, "Grief", scale)
 	helpMenu = helpScreen.HelpScreen(scale)
+	dialogueHandler = dialogue.Dialogue(gameScreen, scale)
+	util.loadAudio("Background Sound.ogg")
+	#dialogueHandler.initialize("Lorem ipsum and all that jazz. We know this is placeholder text")
+	
 	
 	isMainMenu = True
 	isGamePlay = False
 	isHelpMenu = False
+	isDialogue = False
 	isPlayerInitialized = False
 	isMapInitialized = False
+	movementAllowed = True
 	
 	canPressLeft = True
 	canPressRight = True
@@ -128,15 +141,16 @@ def main(args):
 					mainMap = mapScreen.MapScreen(gameScreen, scale)
 					isMapInitialized = True
 				#TODO: check for collision before moving the player
-				if (leftPressed):
-					mainMap.shiftScreen((scale,0))
-				if (rightPressed):
-					mainMap.shiftScreen((-scale,0))
-				if (upPressed):
-					mainMap.shiftScreen((0,scale))
-				if (downPressed):
-					mainMap.shiftScreen((0,-scale))
-				#if z is pressed, check for collision IN FRONT of where the player is
+				if (movementAllowed):
+					if (leftPressed):
+						mainMap.shiftScreen((scale,0))
+					if (rightPressed):
+						mainMap.shiftScreen((-scale,0))
+					if (upPressed):
+						mainMap.shiftScreen((0,scale))
+					if (downPressed):
+						mainMap.shiftScreen((0,-scale))
+			#if z is pressed, check for collision IN FRONT of where the player is
 			#handle drawing things
 			#draw everything onto a single surface, then blit that surface onto the screen at the end
 			#the drawing should only occur at the fastest 60 times per second
@@ -150,6 +164,11 @@ def main(args):
 			if (isGamePlay):
 				mainMap.blitMap(gameScreen)
 				mainCharacter.drawCharacter(gameScreen)
+				if (isDialogue):
+					if (zPressed):
+						dialogueHandler.iterate(gameScreen, True)
+					else:
+						dialogueHandler.iterate(gameScreen, False)
 			if (isHelpMenu):
 				helpMenu.drawHelp(gameScreen)
 			pygame.display.update()
