@@ -4,10 +4,10 @@ import util
 import mainMenu
 import helpScreen
 import mapScreen
-import character
 import pygame.time
 import pygame.mixer
 import dialogue
+import npc
 
 def main(args):
 	pygame.init()
@@ -28,6 +28,13 @@ def main(args):
 	helpMenu = helpScreen.HelpScreen(scale)
 	dialogueHandler = dialogue.Dialogue(gameScreen, scale)
 	util.loadAudio("Background Sound.ogg")
+	mainCharacter = character.Character(gameScreen, scale)
+	mainMap = mapScreen.MapScreen(gameScreen, scale)
+	
+	NPCStoLoad = npc.get_npcs(0)
+	npcList = []
+	for notPlayer in NPCStoLoad:
+		npcList.append(npc.NPC(scale, notPlayer))
 	#dialogueHandler.initialize("Lorem ipsum and all that jazz. We know this is placeholder text")
 	
 	
@@ -35,8 +42,6 @@ def main(args):
 	isGamePlay = False
 	isHelpMenu = False
 	isDialogue = False
-	isPlayerInitialized = False
-	isMapInitialized = False
 	movementAllowed = True
 	
 	canPressLeft = True
@@ -134,22 +139,28 @@ def main(args):
 					canPressZ = True
 					
 			if (isGamePlay):
-				if (not(isPlayerInitialized)):
-					mainCharacter = character.Character(gameScreen, scale)
-					isPlayerInitialized = True
-				if (not(isMapInitialized)):
-					mainMap = mapScreen.MapScreen(gameScreen, scale)
-					isMapInitialized = True
-				#TODO: check for collision before moving the player
 				if (movementAllowed):
-					if (leftPressed):
-						mainMap.shiftScreen((scale,0))
-					if (rightPressed):
-						mainMap.shiftScreen((-scale,0))
-					if (upPressed):
-						mainMap.shiftScreen((0,scale))
-					if (downPressed):
-						mainMap.shiftScreen((0,-scale))
+					if (leftPressed or rightPressed or upPressed or downPressed):
+						npcRects = list(map(lambda a : a.get_rect(), npcList))
+						if (leftPressed):
+							mapShift = (scale,0)
+							newDirection = 0
+						if (rightPressed):
+							mapShift = (-scale,0)
+							newDirection = 1
+						if (upPressed):
+							mapShift = (0,scale)
+							newDirection = 2
+						if (downPressed):
+							mapShift = (0,-scale)
+							newDirection = 3
+						#TODO: Set up bounds on the screen
+						if (mainCharacter.willCollide(mapShift, npcRects, newDirection)):
+							mainMap.shiftScreen(mapShift)
+							mainCharacter.changeDirection(newDirection)
+				#if (zPressed):#maybe dialogue?
+					#potentialDialogue = mainCharacter.
+					#dialogueHandler.initialize("Lorem ipsum and all that jazz. We know this is placeholder text")
 			#if z is pressed, check for collision IN FRONT of where the player is
 			#handle drawing things
 			#draw everything onto a single surface, then blit that surface onto the screen at the end
@@ -169,6 +180,9 @@ def main(args):
 						dialogueHandler.iterate(gameScreen, True)
 					else:
 						dialogueHandler.iterate(gameScreen, False)
+				mapOffset = mainMap.get_position()
+				for notPlayer in npcList:
+					notPlayer.drawNPC(gameScreen, mapOffset)
 			if (isHelpMenu):
 				helpMenu.drawHelp(gameScreen)
 			pygame.display.update()
