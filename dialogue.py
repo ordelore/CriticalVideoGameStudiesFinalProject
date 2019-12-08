@@ -59,4 +59,6 @@ class Dialogue:
 				self.i += 2
 			else:
 				self.i += 1
-		
+			return False
+		else:
+			return True

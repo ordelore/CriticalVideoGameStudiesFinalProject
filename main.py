@@ -158,9 +158,15 @@ def main(args):
 						if (mainCharacter.willCollide(mapShift, npcRects, newDirection)):
 							mainMap.shiftScreen(mapShift)
 							mainCharacter.changeDirection(newDirection)
-				#if (zPressed):#maybe dialogue?
-					#potentialDialogue = mainCharacter.
-					#dialogueHandler.initialize("Lorem ipsum and all that jazz. We know this is placeholder text")
+					if (zPressed and canPressZ): #maybe dialogue
+						potentialDialogue = mainCharacter.getCollisionDialogue(npcList)
+						if (potentialDialogue != None):
+							dialogueHandler.initialize(potentialDialogue)
+							done = False
+							isDialogue = True
+							movementAllowed = False
+					elif (not(zPressed)):
+						canPressZ = True
 			#if z is pressed, check for collision IN FRONT of where the player is
 			#handle drawing things
 			#draw everything onto a single surface, then blit that surface onto the screen at the end
@@ -176,10 +182,15 @@ def main(args):
 				mainMap.blitMap(gameScreen)
 				mainCharacter.drawCharacter(gameScreen)
 				if (isDialogue):
-					if (zPressed):
-						dialogueHandler.iterate(gameScreen, True)
+					if (zPressed and not(done)):
+						done = dialogueHandler.iterate(gameScreen, True)
 					else:
-						dialogueHandler.iterate(gameScreen, False)
+						done = dialogueHandler.iterate(gameScreen, False)
+					if (done and zPressed and canPressZ):
+						print("dialogue done")
+						isDialogue = False
+						movementAllowed = True
+						canPressZ = False
 				mapOffset = mainMap.get_position()
 				for notPlayer in npcList:
 					notPlayer.drawNPC(gameScreen, mapOffset)
