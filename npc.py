@@ -6,14 +6,16 @@ class NPC():
 	
 	def __init__(self, scale, npcIndex):
 		npcs = ["Teacher"]
-		npcDialogue = ["I'm really sorry to hear about what happened to *****. The two of you used to love playing piano together"]
-		npcPositions = [(160, 150)]
+		npcDialogueBefore = ["I'm sorry to hear about what happened to Scott. You loved to play music together"]
+		npcDialogueAfter  = ["You were going to be in a concert together. It's a shame we'll never hear it. I'll see you tomorrow"]
+		npcPositions = [(160 * scale, 150 * scale)]
 		angles = [2]
 		scalings = [0.1]
 		
 		self.name = npcs[npcIndex]
-		self.dialogue = npcDialogue[npcIndex]
-		self.position = list(map(lambda a: a*scale, npcPositions[npcIndex]))
+		self.dialogueBefore = npcDialogueBefore[npcIndex]
+		self.dialogueAfter = npcDialogueAfter[npcIndex]
+		self.position = npcPositions[npcIndex]
 		scaling = scalings[npcIndex] * scale
 		self.images = []
 		if (angles[npcIndex] != 2):
@@ -38,7 +40,7 @@ class NPC():
 		self.rect = pygame.Rect(self.onscreenPosition, self.imageSize)
 		return self.rect
 		
-	def get_dialogue(self):
-		return self.dialogue
+	def get_dialogue(self, isBeforeDungeon):
+		return (self.dialogueAfter, self.dialogueBefore)[isBeforeDungeon]
 	#functions we need: a collision detection, or something
 	#return dialogue

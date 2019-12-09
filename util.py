@@ -1,6 +1,6 @@
 import pygame, os
 import pygame.font
-import pygame.mixer
+from pygame import mixer
 black  	  = [0,0,0]
 white  	  = [255,255,255]
 
@@ -10,8 +10,10 @@ green  	  = [0,255,0]
 greenBlue = [0,255,255]
 blue   	  = [0,0,255]
 purple 	  = [255,0,255]
+lightYellowGreen = [189,255,75]
 
 rainbow = (red,yellow,green,greenBlue,blue,purple)
+musicNames = ["Background Theme.ogg", "Regret Theme.ogg", "Sad Theme.ogg", "Anger Theme.ogg"]
 
 def getRainbow(index):
 	return rainbow[index % len(rainbow)]
@@ -27,7 +29,7 @@ def loadImage(spriteName, subFolder, scale):
 		newSize = tuple([int(scale*x) for x in sprite.get_size()])
 		return pygame.transform.scale(sprite, newSize)
 
-def loadAudio(name):
-	
-	pygame.mixer.music.load(os.path.join("audio", name))
-	pygame.mixer.music.play(-1)
+def loadAudio(nameIndex):
+	mixer.music.stop()
+	mixer.music.load(os.path.join("audio", musicNames[nameIndex]))
+	mixer.music.play(-1)

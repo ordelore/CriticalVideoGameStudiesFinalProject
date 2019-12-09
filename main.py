@@ -8,6 +8,7 @@ import pygame.time
 import pygame.mixer
 import dialogue
 import npc
+import enemy
 
 def main(args):
 	pygame.init()
@@ -27,9 +28,11 @@ def main(args):
 	menu = mainMenu.Menu(gameScreen, "Grief", scale)
 	helpMenu = helpScreen.HelpScreen(scale)
 	dialogueHandler = dialogue.Dialogue(gameScreen, scale)
-	util.loadAudio("Background Sound.ogg")
+	util.loadAudio(0)
 	mainCharacter = character.Character(gameScreen, scale)
-	mainMap = mapScreen.MapScreen(gameScreen, scale)
+	mainMap = mapScreen.MapScreen(gameScreen, scale, 0)
+	firstVillain = enemy.Enemy(scale)
+	
 	
 	NPCStoLoad = npc.get_npcs(0)
 	npcList = []
@@ -42,7 +45,11 @@ def main(args):
 	isGamePlay = False
 	isHelpMenu = False
 	isDialogue = False
+	isDungeon = False
+	isDungeonTransition = False
+	isBeforeDungeon = True
 	movementAllowed = True
+	done = False
 	
 	canPressLeft = True
 	canPressRight = True
@@ -159,7 +166,7 @@ def main(args):
 							mainMap.shiftScreen(mapShift)
 							mainCharacter.changeDirection(newDirection)
 					if (zPressed and canPressZ): #maybe dialogue
-						potentialDialogue = mainCharacter.getCollisionDialogue(npcList)
+						potentialDialogue = mainCharacter.getCollisionDialogue(npcList, isBeforeDungeon)
 						if (potentialDialogue != None):
 							dialogueHandler.initialize(potentialDialogue)
 							done = False
@@ -167,6 +174,24 @@ def main(args):
 							movementAllowed = False
 					elif (not(zPressed)):
 						canPressZ = True
+			if (isDialogue):
+				if (done and zPressed and canPressZ):
+					if (isDungeonTransition):
+						isDialogue = False
+						isDungeonTransition = False
+						isDungeon = True
+						movementAllowed = True
+						canPressZ = False
+						mainMap = mapScreen.MapScreen(gameScreen, scale, 2)
+					if (isBeforeDungeon):
+						isDungeonTransition = True
+						isBeforeDungeon = False
+						npcList = []
+						done = False
+						mainMap = mapScreen.MapScreen(gameScreen, scale, 1)
+						dialogueHandler.initialize("You were supposed to play with me")
+						util.loadAudio(1)
+
 			#if z is pressed, check for collision IN FRONT of where the player is
 			#handle drawing things
 			#draw everything onto a single surface, then blit that surface onto the screen at the end
@@ -180,18 +205,15 @@ def main(args):
 				menu.drawMainMenu(gameScreen)
 			if (isGamePlay):
 				mainMap.blitMap(gameScreen)
+				mapOffset = mainMap.get_position()
 				mainCharacter.drawCharacter(gameScreen)
 				if (isDialogue):
 					if (zPressed and not(done)):
 						done = dialogueHandler.iterate(gameScreen, True)
 					else:
 						done = dialogueHandler.iterate(gameScreen, False)
-					if (done and zPressed and canPressZ):
-						print("dialogue done")
-						isDialogue = False
-						movementAllowed = True
-						canPressZ = False
-				mapOffset = mainMap.get_position()
+				if (isDungeon):
+					firstVillain.blitEnemy(gameScreen, mainCharacter, mapOffset)
 				for notPlayer in npcList:
 					notPlayer.drawNPC(gameScreen, mapOffset)
 			if (isHelpMenu):

@@ -2,7 +2,7 @@ import pygame, os, util
 import pygame.font
 class HelpScreen:
 	def __init__(self, scale):
-		self.helpText = "This is currently placeholder text. Eventually, there will be instructions and controls"
+		self.helpText = "Welcome to the Grief demo. This is a game about loss, and this demo implements a portion of this grander vision. Use the arrow keys to move around and use the [Z] button to interact with objects and NPCs. Press [Z] to return to the main menu."
 		self.helpFont = util.loadFont("GraffitiPaintBrush.ttf", int(scale * 15))
 		self.fontColor = util.white
 	#code for multiline text rendering is adapted from
@@ -16,7 +16,7 @@ class HelpScreen:
 		x, y = pos
 		for line in words:
 			for word in line:
-				word_surface = self.helpFont.render(word, 0, self.fontColor)
+				word_surface = self.helpFont.render(word, True, self.fontColor)
 				word_width, word_height = word_surface.get_size()
 				if x + word_width >= max_width:
 					x = pos[0]  # Reset the x.

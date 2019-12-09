@@ -29,14 +29,15 @@ class Character():
 			positionY = int(self.screenHeight / 2 - playerHeight / 2)
 			self.position = (positionX, positionY)
 			self.rect = pygame.Rect(self.position, (self.image.get_width(), self.image.get_height()))
-			
+	def get_position(self):
+		return self.position
 	def drawCharacter(self, surface):
 		surface.blit(self.image, self.position)
 
 	def detectCollision(self, otherRect):
 		return self.rect.colliderect(otherRect)
 	
-	def getCollisionDialogue(self, otherNPCs):
+	def getCollisionDialogue(self, otherNPCs, isBeforeDialogue):
 		#this si going to be like seeing that if the player moved forward and collided, what npc would they collide with? and then return that NPCs line of dialogue
 		#otherwise, return an empty string
 		if (self.direction == 0):
@@ -52,14 +53,19 @@ class Character():
 		futureRect = pygame.Rect(futurePosition, (self.rect.width, self.rect.height))
 		for nonplayer in otherNPCs:
 			if futureRect.colliderect(nonplayer.get_rect()):
-				return nonplayer.get_dialogue()
+				return nonplayer.get_dialogue(isBeforeDialogue)
 		return None
 
 		#for i in range(len(otherNPCs)):
 			
 	def willCollide(self, offset, rectList, direction):
-		futurePosition = (self.rect.x - offset[0], self.rect.y - offset[1])
 		futureImage = self.imageArray[direction]
+		
+		positionX = int(self.screenWidth / 2 - futureImage.get_width() / 2)
+		positionY = int(self.screenHeight / 2 - futureImage.get_height() / 2)
+		
+		futurePosition = (positionX - offset[0], positionY - offset[1])
+		playerWidth, playerHeight = futureImage.get_size()
 		futureRect = pygame.Rect(futurePosition, futureImage.get_size())
 		for npcRect in rectList:
 			if futureRect.colliderect(npcRect):
