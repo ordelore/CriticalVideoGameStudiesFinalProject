@@ -6,7 +6,7 @@ from os.path import join
 
 def calcVelocity(sourcePosition, target):
 	velocity = (target[0] - sourcePosition[0], target[1] - sourcePosition[1])
-	norm = sqrt(velocity[0] ** 2 + velocity[1] ** 2)
+	norm = sqrt((velocity[0] ** 2 + velocity[1] ** 2) / 2)
 	velocity = list(map(lambda a : a / norm, velocity))
 	#print(velocity)
 	return velocity
@@ -51,7 +51,7 @@ class Enemy:
 			attackRect = gameCharacter.get_attackRect()
 			if (enemyRect.colliderect(attackRect)):
 				self.currentImage = self.images[2]
-				self.projectileCounter = 21
+				
 				self.lives -= 1
 				gameCharacter.setCoolDown()
 				if (self.lives == 0):
@@ -65,7 +65,7 @@ class Enemy:
 			if (projRect.colliderect(charRect)):
 				self.projectiles.remove(projectile)
 				gameCharacter.damage()
-			if (lifetime == 300):
+			if (lifetime == 500):
 				self.projectiles.remove(projectile)
 		
 		self.projectileCounter += 1
