@@ -5,6 +5,7 @@ class MapScreen:
 		scales = [1, 1, 0.1]
 		self.image = util.loadImage(names[index], "Rooms", scale * scales[index])
 		self.position = (0,0)
+		self.screenSize = self.image.get_size()
 	
 	
 	def blitMap(self, surface):
@@ -14,6 +15,8 @@ class MapScreen:
 		ogPosition0 = self.position[0]
 		ogPosition1 = self.position[1]
 		self.position = (ogPosition0 + offset[0], ogPosition1 + offset[1])
-	
+	def get_rect(self):
+		
+		return pygame.rect.Rect(self.position, self.screenSize)
 	def get_position(self):
 		return self.position

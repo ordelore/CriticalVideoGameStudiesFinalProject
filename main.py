@@ -146,6 +146,21 @@ def main(args):
 				if (movementAllowed):
 					if (leftPressed or rightPressed or upPressed or downPressed):
 						npcRects = list(map(lambda a : a.get_rect(), npcList))
+						#get outer boundary bounds
+						screenRect = mainMap.get_rect()
+						
+						topBoundary = pygame.rect.Rect(screenRect.topleft, (screenRect.width, 2 * scale))
+						topBoundary.y -= 2 * scale
+						bottomBoundary = pygame.rect.Rect(screenRect.bottomleft, screenRect.size)
+						leftBoundary = pygame.rect.Rect(screenRect.topleft, (2 * scale, screenRect.height))
+						leftBoundary.x -= 2 * scale
+						rightBoundary = pygame.rect.Rect(screenRect.topright, screenRect.size)
+						
+						npcRects.append(topBoundary)
+						npcRects.append(bottomBoundary)
+						npcRects.append(leftBoundary)
+						npcRects.append(rightBoundary)
+						
 						mapShift = [0,0]
 						if (leftPressed):
 							mapShift[0] += scale
