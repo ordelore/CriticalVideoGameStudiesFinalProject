@@ -20,13 +20,15 @@ class Enemy:
 		damagedImage = util.loadImage("Piano_PainAnimation.png", join("Monsters", "Piano"), scaling)
 		self.wordFont = util.loadFont("Remix Regular.ttf", 20 * scale)
 		self.images = [openImage, closedImage, damagedImage]
-		self.currentImage = 0
+		self.currentImage = closedImage
 		self.projectiles = []
 		self.projectileCounter = 0
-		
-		
+		self.lives = 3
+		self.dead = False
+	def isDead(self):
+		return self.dead
 	def fireProjectile(self, velocity, onscreenPos):
-		words = ["Why", "If Only", "I'm Wrong"]
+		words = ["Why", "If Only", "I'm Wrong", "What If", "I'm Sorry"]
 		wordIndex = randrange(len(words))
 		wordSurface = self.wordFont.render(words[wordIndex], True, util.lightYellowGreen)
 		
@@ -42,30 +44,52 @@ class Enemy:
 		self.position = (self.position[0] + velocity[0], self.position[1] + velocity[1])
 		onscreenPosition = (int(self.position[0] + offsetXY[0]), int(self.position[1] + offsetXY[1]))
 		
-		print("enemy position: ", onscreenPosition)
-		screen.blit(self.images[self.currentImage], onscreenPosition)
+		if (gameCharacter.isAttacking()):
+			enemySize = self.currentImage.get_size()
+			enemyPosition = onscreenPosition
+			enemyRect = pygame.Rect(enemyPosition, enemySize)
+			attackRect = gameCharacter.get_attackRect()
+			if (enemyRect.colliderect(attackRect)):
+				self.currentImage = self.images[2]
+				self.projectileCounter = 21
+				self.lives -= 1
+				gameCharacter.setCoolDown()
+				if (self.lives == 0):
+					self.dead = True
+		screen.blit(self.currentImage, onscreenPosition)
 		
+		charRect = gameCharacter.get_rect()
 		for projectile in self.projectiles:
-			lifetime = projectile.blitProjectile(screen, onscreenPosition)
+			lifetime = projectile.blitProjectile(screen, offsetXY)
+			projRect = projectile.get_rect()
+			if (projRect.colliderect(charRect)):
+				self.projectiles.remove(projectile)
+				gameCharacter.damage()
 			if (lifetime == 300):
 				self.projectiles.remove(projectile)
 		
 		self.projectileCounter += 1
-		if (self.projectileCounter % 100 == 0):
-			self.fireProjectile(velocity, onscreenPosition)
+		if (self.projectileCounter % 50 == 10):
+			self.fireProjectile(velocity, self.position)
+		elif (self.projectileCounter % 50 == 0):
+			self.currentImage = self.images[0]
+		elif (self.projectileCounter % 50 == 20):
+			self.currentImage = self.images[1]
 		
 class Projectile:
 	def __init__(self, image, velocity, position):
 		self.image = image
-		self.velocity = list(map(lambda a: a * 2, velocity))
+		self.velocity = velocity
 		self.position = position
 		self.lifetime = 0
-	
+	def get_rect(self):
+		size = self.image.get_size()
+		return pygame.Rect(self.previousOnscreen, size)
 	def blitProjectile(self, surface, offsetXY):
 		self.lifetime += 1
-		newX = int(self.position[0] + self.velocity[0])
-		newY = int(self.position[1] + self.velocity[1])
+		newX = self.position[0] + self.velocity[0]
+		newY = self.position[1] + self.velocity[1]
 		self.position = (newX, newY)
-		print("projectile source: ", position)
-		surface.blit(self.image, (self.position[0] + offsetXY[0], self.position[1] + offsetXY[1]))
+		self.previousOnscreen = (int(self.position[0] + offsetXY[0]), int(self.position[1] + offsetXY[1]))
+		surface.blit(self.image, self.previousOnscreen)
 		return self.lifetime

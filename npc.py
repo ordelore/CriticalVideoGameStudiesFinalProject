@@ -1,16 +1,19 @@
 import pygame, util
-def get_npcs(sceneIndex):
-	npcs = [[0]]
-	return npcs[sceneIndex]
+def get_npcs(sceneIndex, scale):
+	npcs = [[0], [0,1]]
+	npcList = []
+	for notPlayer in npcs[sceneIndex]:
+		npcList.append(NPC(scale, notPlayer))
+	return npcList
 class NPC():
 	
 	def __init__(self, scale, npcIndex):
-		npcs = ["Teacher"]
-		npcDialogueBefore = ["I'm sorry to hear about what happened to Scott. You loved to play music together"]
-		npcDialogueAfter  = ["You were going to be in a concert together. It's a shame we'll never hear it. I'll see you tomorrow"]
-		npcPositions = [(160 * scale, 150 * scale)]
-		angles = [2]
-		scalings = [0.1]
+		npcs = ["Teacher", "Door"]
+		npcDialogueBefore = ["I'm sorry to hear about what happened to Scott. You both loved to play music together", "DNE"]
+		npcDialogueAfter  = ["You were going to be in a concert together. It's a shame we'll never hear it. I'll see you tomorrow", "See how they dismiss you? You had an experience that the world wants you to ignore."]
+		npcPositions = [(160 * scale, 150 * scale), (174 * scale, 50 * scale)]
+		angles = [2, 2]
+		scalings = [0.1, 1]
 		
 		self.name = npcs[npcIndex]
 		self.dialogueBefore = npcDialogueBefore[npcIndex]

@@ -9,12 +9,41 @@ class Character():
 		upImage = util.loadImage("Avatar Back.png", "Characters", scaleSize)
 		rightImage = util.loadImage("Avatar Right.png", "Characters", scaleSize)
 		downImage = util.loadImage("Avatar Front.png", "Characters", scaleSize)
+		self.attackImage = util.loadImage("Avatar Attack.png", "Characters", scaleSize)
+		
+		hurtLeftImage = util.loadImage("Avatar Left Damaged.png", "Characters", scaleSize)
+		hurtUpImage = util.loadImage("Avatar Back Damaged.png", "Characters", scaleSize)
+		hurtRightImage = util.loadImage("Avatar Right Damaged.png", "Characters", scaleSize)
+		hurtDownImage = util.loadImage("Avatar Front Damaged.png", "Characters", scaleSize)
+		
+		self.attackImage = util.loadImage("Avatar Attack.png", "Characters", scaleSize)
 		self.screenWidth, self.screenHeight = surface.get_size()
-		
+		self.attacking = False
 		self.imageArray = [leftImage, rightImage, upImage, downImage]
-		
+		self.burnedArray = [hurtLeftImage, hurtRightImage, hurtUpImage, hurtDownImage]
+		self.cooldownCounter = -1
+		self.isBurned = False
 		self.changeDirection(3)
+		self.lives = 3
+		self.dead = False
+		self.burnedCounter = 0
+	#need to rework how attacking works
+	def attack(self):
+		if (self.cooldownCounter <= 0):
+			self.cooldownCounter = 30
+			self.attacking = True
 		
+	def isAttacking(self):
+		return self.attacking
+	def get_attackRect(self):
+		attackRect = self.attackImage.get_rect()
+		return pygame.Rect(self.attackPosition, (attackRect.width, attackRect.height))
+	def setCoolDown(self):
+		self.attacking = False
+		self.cooldownCounter = 30
+	def get_rect(self):
+		size = self.image.get_size()
+		return pygame.Rect(self.position, size)
 	def changeDirection(self, direction):
 		#direction is
 		#0: left
@@ -23,15 +52,42 @@ class Character():
 		#3: down
 		if (0 <= direction <= 3):
 			self.direction = direction
-			self.image = self.imageArray[direction]
+			if (not(self.isBurned)):
+				self.image = self.imageArray[direction]
+			else:
+				self.burnedCounter -= 1
+				self.image = self.burnedArray[direction]
+				if (self.burnedCounter <= 0):
+					self.isBurned = False
 			playerWidth, playerHeight = self.image.get_size()
 			positionX = int(self.screenWidth / 2 - playerWidth / 2)
 			positionY = int(self.screenHeight / 2 - playerHeight / 2)
+			
+			attackPositionX = positionX + playerWidth
+			attackPositionY = positionY + playerHeight // 2
+			
+			self.attackPosition = (attackPositionX, attackPositionY)
 			self.position = (positionX, positionY)
 			self.rect = pygame.Rect(self.position, (self.image.get_width(), self.image.get_height()))
 	def get_position(self):
 		return self.position
+	def damage(self):
+		if (not(self.isBurned)):
+			self.lives -= 1
+			self.isBurned = True
+			self.burnedCounter = 30
+		if (self.lives == 0):
+			self.dead = True
+	def isDead(self):
+		return self.dead
 	def drawCharacter(self, surface):
+		if (self.attacking):
+			surface.blit(self.attackImage, self.attackPosition)
+		if (self.cooldownCounter > 0):
+			self.cooldownCounter -= 0.5
+		elif (self.attacking):
+			self.setCoolDown()
+				
 		surface.blit(self.image, self.position)
 
 	def detectCollision(self, otherRect):
