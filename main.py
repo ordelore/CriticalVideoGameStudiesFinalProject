@@ -9,6 +9,7 @@ import pygame.mixer
 import dialogue
 import npc
 import enemy
+import sys
 
 def main(args):
 	pygame.init()
@@ -19,6 +20,9 @@ def main(args):
 	size = (int(scale * 320),int(scale * 240))
 	#intialize the game screen and fill it with black
 	gameScreen = pygame.display.set_mode(size)
+	pygame.display.set_caption("Grief")
+	icon = util.loadImage("icon.png", "icons", 1)
+	pygame.display.set_icon(icon)
 	gameScreen.fill(util.black)
 	pygame.display.update()
 	
